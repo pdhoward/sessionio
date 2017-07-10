@@ -1,11 +1,6 @@
-![Screenshot](https://raw.githubusercontent.com/OmarElGabry/chat.io/master/public/img/chat.io.gif)
 
-# SESSION
-[![Dependency Status](https://www.versioneye.com/user/projects/57d746d1df40d0004a4a9e21/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/57d746d1df40d0004a4a9e21)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/OmarElGabry/chat.io/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/OmarElGabry/chat.io/?branch=master)
-[![Code Climate](https://codeclimate.com/github/OmarElGabry/chat.io/badges/gpa.svg)](https://codeclimate.com/github/OmarElGabry/chat.io)
 
-A basic framework for connecting businesses to the conversational economy
+#A basic framework for connecting businesses to the conversational economy
 
 ## Index
 + [Watch](#watch)
@@ -60,41 +55,10 @@ Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.co
 	```
 Your app should now be running on [localhost:3000](http://localhost:3000/).
 
-### Deploying to Heroku
-Make sure you have the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
-
-1. Create a new Heroku application, and push your chat application to a Git remote repository
-
-	```
-	$ heroku create
-	$ git push heroku master
-	```
-
-	or
-
-	[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-2. Now, you need to set up configuration variables on Heroku.
-	1. Go to Settings -> Reveal Config Vars.
-	2. Add configuration variables. All needed variables are inside _app/config/index.js_.
-	Typically, these are the configuration variables you need to assign:
-	```{ dbURI, sessionSecret, facebookClientID, facebookClientSecret, twitterConsumerKey, twitterConsumerSecret }```(see [Setup Configurations](#configurations)).
-
-3. One last step is to add [Redis](http://redis.io/) as an Add-on on Heroku.
-	1. Go to Resources -> Add-ons
-	2. Select Heroku Redis
-	> You need to setup a billing account even if the add-on is free.
-4. Open your chat application in the browser
-
-	```
-	$ heroku open
-	```
-
-
 
 ## How It Works<a name="how-it-works"></a>
 ### Setup Configurations<a name="configurations"></a>
-The configurations on production will be assigned from Environment Variables on Heroku, while the development configurations reside inside _app/config/config.json_ file.
+The development configurations reside inside _app/config/config.json_ file.
 
 #### MongoDB & MongoLab
 You need to create a database on MongoLab, then create a database user, get the `MongoDB URI`, and assign it to `dbURI`.
@@ -122,7 +86,7 @@ Now, you can assign the `Consumer Key` to `twitterConsumerKey`, and `Consumer Se
 ##### The Callback URL
 - It can point back to your localhost; _[http://localhost:3000/auth/facebook/callback](http://localhost:3000/auth/facebook/callback)_
 
-- When deploy to Heroku, you will have something look like this; _[http://my-chat-app.herokuapp.com/auth/facebook/callback](http://my-chat-app.herokuapp.com/auth/facebook/callback)_
+- or use ngrok locally
 
 #### Session
 The session needs a random string to make sure the session id in the browser is random. That random string is used to encrypt the session id in the browser, _Why?_ To prevent session id guessing.
@@ -134,7 +98,7 @@ Mongoose is used to interact with a MongoDB that's hosted by MongoLab.
 #### Schemas
 There are two schemas; users and rooms.
 
-Each user has a username, passowrd, social Id, and picture. If the user is logged via username and password, then social Id has to be null, and the if logged in via a social account, then the password will be null.
+Each user has a username, password, social Id, and picture. If the user is logged via username and password, then social Id has to be null, and the if logged in via a social account, then the password will be null.
 
 Each room has a title, and array of connections. Each item in the connections array represents a user connected through a unique socket; object composed of _{userId + socketId}_. Both of them together are unique.
 
@@ -157,14 +121,12 @@ There are two namespaces used; `/rooms` and `/chatroom`.
 ### Logger<a name="logger"></a>
 And It doesn't go without saying, you need to monitor your application. [Winston](https://github.com/winstonjs/winston) can log and catch Uncaught Exceptions. All logs are displayed in the console, and saved in _debug.log_ file.
 
-On Heroku, you can monitor the logs by clicking on _More -> View Logs_ on the top left of your application dashboard.
-
 ## Support <a name="support"></a>
 I've written this script in my free time during my studies. If you find it useful, please support the project by spreading the word.
 
 ## Contribute <a name="contribute"></a>
 
-Contribute by creating new issues, sending pull requests on Github or you can send an email at: omar.elgabry.93@gmail.com
+Contribute by creating new issues, sending pull requests on Github
 
 ## License <a name="license"></a>
 Built under [MIT](http://www.opensource.org/licenses/mit-license.php) license.
