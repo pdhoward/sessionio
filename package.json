@@ -1,21 +1,21 @@
 {
-  "name": "chat.io",
+  "name": "sessionio",
   "version": "1.0.0",
-  "description": "A Real Time Chat Application built using Node.js, Express, Mongoose, Socket.io, Passport, & Redis.",
+  "description": "Framework foundational to connecting businesses to conversational economy",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
-    "url": "git+https://github.com/OmarElGabry/chat.io.git",
+    "url": "git+https://github.com/pdhoward/sessionio.git",
     "type": "git"
   },
-  "author": "Omar El Gabry <omar.elgabry.93@gmail.com> (http://omarelgabry.me)",
+  "author": "xio (http://xiollc.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OmarElGabry/chat.io/issues"
+    "url": "https://github.com/pdhoward/sessionio/issues"
   },
-  "homepage": "https://github.com/OmarElGabry/chat.io",
+  "homepage": "https://xiollc.com",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",

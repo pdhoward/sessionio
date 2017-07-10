@@ -9,13 +9,15 @@
 [![Code Climate](https://codeclimate.com/github/pdhoward/solutionio/badges/gpa.svg)](https://codeclimate.com/github/pdhoward/solutionio)
 
 # make and store gifs
-https://gist.github.com/paulirish/b6cf161009af0708315c
 
-raw github content
+Link the markdown to the gif via the raw.githubusercontent url
 
-https://developer.github.com/changes/2014-04-25-user-content-security/
 
 github tricks
 https://github.com/tiimgreen/github-cheat-sheet
 
 http://solutionoptimist.com/2013/12/28/awesome-github-tricks/
+
+https://github.com/adam-p/markdown-here
+
+https://imgflip.com/
