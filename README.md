@@ -6,8 +6,7 @@
 + [Watch](#watch)
 + [Features](#features)
 + [Installation](#installation)
-+ [How It Works](#how-it-works)
-+ [Support](#support)
++ [Getting Started](#getting-started)
 + [Contribute](#contribute)
 + [License](#license)
 
@@ -56,7 +55,7 @@ Make sure you have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.co
 Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 
-## How It Works<a name="how-it-works"></a>
+## Getting Started With the Conversational Economy<a name="getting-started"></a>
 ### Setup Configurations<a name="configurations"></a>
 The development configurations reside inside _app/config/config.json_ file.
 
@@ -120,9 +119,6 @@ There are two namespaces used; `/rooms` and `/chatroom`.
 
 ### Logger<a name="logger"></a>
 And It doesn't go without saying, you need to monitor your application. [Winston](https://github.com/winstonjs/winston) can log and catch Uncaught Exceptions. All logs are displayed in the console, and saved in _debug.log_ file.
-
-## Support <a name="support"></a>
-I've written this script in my free time during my studies. If you find it useful, please support the project by spreading the word.
 
 ## Contribute <a name="contribute"></a>
 
