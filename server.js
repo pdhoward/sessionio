@@ -7,7 +7,7 @@ var path 		= require('path');
 var bodyParser 	= require('body-parser');
 var flash 		= require('connect-flash');
 
-// Chat application components
+//  application components
 var routes 		= require('./app/routes');
 var session 	= require('./app/session');
 var passport    = require('./app/auth');
