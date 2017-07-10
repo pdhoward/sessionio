@@ -74,6 +74,9 @@ You need to register a new application on both Facebook and Twitter to get your 
 6. Go to App Review -> Make your application public.
 
 Now, you can assign the `App ID` to `facebookClientID`, and `App Secret` to `facebookClientSecret`.
+
+Note - even when using grok, the localhost:3000 route needs to be whitelisted as well
+
 ##### Registering the app on Twitter
 1. Go to [Twitter Apps](https://apps.twitter.com/)
 2. Create new app, and fill the required information.
@@ -85,7 +88,7 @@ Now, you can assign the `Consumer Key` to `twitterConsumerKey`, and `Consumer Se
 ##### The Callback URL
 - It can point back to your localhost; _[http://localhost:3000/auth/facebook/callback](http://localhost:3000/auth/facebook/callback)_
 
-- or use ngrok locally
+- or use ngrok locally with the path appended
 
 #### Session
 The session needs a random string to make sure the session id in the browser is random. That random string is used to encrypt the session id in the browser, _Why?_ To prevent session id guessing.
