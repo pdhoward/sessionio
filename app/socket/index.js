@@ -1,19 +1,67 @@
 'use strict';
 
-var config 	= require('../config');
-var redis 	= require('redis').createClient;
-var adapter = require('socket.io-redis');
+var config 	= 		require('../config');
+var redis 	= 		require('redis').createClient;
+var adapter = 		require('socket.io-redis');
+var Room = 				require('../models/room');
 
-var Room = require('../models/room');
+let port = config.redis.port;
+let host = config.redis.host;
+let password = config.redis.password;
+
+////////////////////
+
+	////////////////////////////////////////////////
+  var Redisx = require('ioredis');
+  var redisx = new Redisx({
+   port: port,
+   host: host
+
+ });
+  var pub = new Redisx({
+   port: port,
+   host: host
+ })
+/*
+
+  redisx.subscribe('news', 'music', function (err, count) {
+    // Now we are subscribed to both the 'news' and 'music' channels.
+    // `count` represents the number of channels we are currently subscribed to.
+
+    pub.publish('news', 'Hello world!');
+    pub.publish('music', 'Hello again!');
+  });
+
+  redisx.on('message', function (channel, message) {
+    // Receive message Hello world! from channel news
+    // Receive message Hello again! from channel music
+    console.log('Receive message %s from channel %s', message, channel);
+  });
+*/
+ //////////////////////////////////////////////
+
 
 /**
  * Encapsulates all code for emitting and listening to socket events
  *
  */
+
+
+
 var ioEvents = function(io) {
+
+	io.of('/').adapter.clients(function (err, clients) {
+		console.log("ARRAY OF SOCKETIDs ")
+  	console.log(clients); // an array containing all connected socket ids
+		});
+
+	io.of('/').adapter.clients(['sales'], function (err, clients) {
+  console.log(clients); // an array containing socket ids in rooms
+		});
 
 	// Rooms namespace
 	io.of('/rooms').on('connection', function(socket) {
+		console.log("CONNECTION NAMESPACE ROOMS")
 
 		// Create a new room
 		socket.on('createRoom', function(title) {
@@ -22,7 +70,7 @@ var ioEvents = function(io) {
 				if(room){
 					socket.emit('updateRoomsList', { error: 'Room title already exists.' });
 				} else {
-					Room.create({ 
+					Room.create({
 						title: title
 					}, function(err, newRoom){
 						if(err) throw err;
@@ -36,9 +84,15 @@ var ioEvents = function(io) {
 
 	// Chatroom namespace
 	io.of('/chatroom').on('connection', function(socket) {
+		console.log("CONNECTION _ NAMESPACE CHATROOM")
+
 
 		// Join a chatroom
 		socket.on('join', function(roomId) {
+
+			console.log("JOIN")
+			console.log({roomId: roomId})
+
 			Room.findById(roomId, function(err, room){
 				if(err) throw err;
 				if(!room){
@@ -58,11 +112,11 @@ var ioEvents = function(io) {
 
 						Room.getUsers(newRoom, socket, function(err, users, cuntUserInRoom){
 							if(err) throw err;
-							
+
 							// Return list of all user connected to the room to the current user
 							socket.emit('updateUsersList', users, true);
 
-							// Return the current user to other connecting sockets in the room 
+							// Return the current user to other connecting sockets in the room
 							// ONLY if the user wasn't connected already to the current room
 							if(cuntUserInRoom === 1){
 								socket.broadcast.to(newRoom.id).emit('updateUsersList', users[users.length - 1]);
@@ -81,7 +135,7 @@ var ioEvents = function(io) {
 				return;
 			}
 
-			// Find the room to which the socket is connected to, 
+			// Find the room to which the socket is connected to,
 			// and remove the current user + socket from this room
 			Room.removeUser(socket, function(err, room, userId, cuntUserInRoom){
 				if(err) throw err;
@@ -100,10 +154,15 @@ var ioEvents = function(io) {
 		// When a new message arrives
 		socket.on('newMessage', function(roomId, message) {
 
+      var msg = {roomId: roomId, message: message}
+      var sendMsg = JSON.stringify(msg)
+
+			pub.publish('newMessage', sendMsg);
+
 			// No need to emit 'addMessage' to the current socket
 			// As the new message will be added manually in 'main.js' file
 			// socket.emit('addMessage', message);
-			
+
 			socket.broadcast.to(roomId).emit('addMessage', message);
 		});
 
@@ -117,19 +176,20 @@ var ioEvents = function(io) {
  */
 var init = function(app){
 
-	var server 	= require('http').Server(app);
-	var io 		= require('socket.io')(server);
+	var server 	= 	require('http').Server(app);
+	var io = 				require('socket.io')(server);
 
 	// Force Socket.io to ONLY use "websockets"; No Long Polling.
 	io.set('transports', ['websocket']);
 
 	// Using Redis
-	let port = config.redis.port;
-	let host = config.redis.host;
-	let password = config.redis.password;
+
 	let pubClient = redis(port, host, { auth_pass: password });
 	let subClient = redis(port, host, { auth_pass: password, return_buffers: true, });
 	io.adapter(adapter({ pubClient, subClient }));
+//	io.adapter(adapter({ host: host, port: port }));
+//  adapter.pubClient.on('error', function(){ console.log("PUB ERROR") });
+//	adapter.subClient.on('error', function(){ console.log("PUB ERROR") });
 
 	// Allow sockets to access session data
 	io.use((socket, next) => {
@@ -139,7 +199,8 @@ var init = function(app){
 	// Define all Events
 	ioEvents(io);
 
-	// The server object will be then used to list to a port number
+
+	// The server object will be then used to listen to a port number
 	return server;
 }
 
