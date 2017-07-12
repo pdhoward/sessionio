@@ -9,36 +9,16 @@ let port = config.redis.port;
 let host = config.redis.host;
 let password = config.redis.password;
 
-////////////////////
-
-	////////////////////////////////////////////////
-  var Redisx = require('ioredis');
-  var redisx = new Redisx({
+var Redisx = require('ioredis');
+var redisx = new Redisx({
    port: port,
    host: host
 
  });
-  var pub = new Redisx({
+var pub = new Redisx({
    port: port,
    host: host
  })
-/*
-
-  redisx.subscribe('news', 'music', function (err, count) {
-    // Now we are subscribed to both the 'news' and 'music' channels.
-    // `count` represents the number of channels we are currently subscribed to.
-
-    pub.publish('news', 'Hello world!');
-    pub.publish('music', 'Hello again!');
-  });
-
-  redisx.on('message', function (channel, message) {
-    // Receive message Hello world! from channel news
-    // Receive message Hello again! from channel music
-    console.log('Receive message %s from channel %s', message, channel);
-  });
-*/
- //////////////////////////////////////////////
 
 
 /**
@@ -46,18 +26,7 @@ let password = config.redis.password;
  *
  */
 
-
-
 var ioEvents = function(io) {
-
-	io.of('/').adapter.clients(function (err, clients) {
-		console.log("ARRAY OF SOCKETIDs ")
-  	console.log(clients); // an array containing all connected socket ids
-		});
-
-	io.of('/').adapter.clients(['sales'], function (err, clients) {
-  console.log(clients); // an array containing socket ids in rooms
-		});
 
 	// Rooms namespace
 	io.of('/rooms').on('connection', function(socket) {
@@ -157,13 +126,28 @@ var ioEvents = function(io) {
       var msg = {roomId: roomId, message: message}
       var sendMsg = JSON.stringify(msg)
 
-			pub.publish('newMessage', sendMsg);
+      redisx.on('message', function (channel, redisMsg) {
+           console.log('Received  ' + channel + ' message: ' + redisMsg);
+
+           var parseMsg = JSON.parse(redisMsg)
+           var textMsg = parseMsg.text
+
+           var sendMsg = {}
+           sendMsg.date      = (new Date(message.date)).toLocaleString();
+           message.username  = parseMsg.name
+           message.content   = parseMsg.text
+
+  //         socket.broadcast.to(roomId).emit('addMessage', textMsg);
+              socket.broadcast.to(roomId).emit('addMessage', message);
+         });
+
+
 
 			// No need to emit 'addMessage' to the current socket
 			// As the new message will be added manually in 'main.js' file
 			// socket.emit('addMessage', message);
 
-			socket.broadcast.to(roomId).emit('addMessage', message);
+
 		});
 
 	});
@@ -182,14 +166,16 @@ var init = function(app){
 	// Force Socket.io to ONLY use "websockets"; No Long Polling.
 	io.set('transports', ['websocket']);
 
-	// Using Redis
-
-	let pubClient = redis(port, host, { auth_pass: password });
-	let subClient = redis(port, host, { auth_pass: password, return_buffers: true, });
-	io.adapter(adapter({ pubClient, subClient }));
-//	io.adapter(adapter({ host: host, port: port }));
-//  adapter.pubClient.on('error', function(){ console.log("PUB ERROR") });
-//	adapter.subClient.on('error', function(){ console.log("PUB ERROR") });
+  // using redislabs pub
+  // subscribe and listen and emit
+  redisx.subscribe('newMessage', function (err, count) {
+			console.log("Subscribed to " + count + " channel")
+    });
+/*
+  redisx.on('message', function (channel, message) {
+       console.log('Received  ' + channel + ' message: ' + message);
+     });
+*/
 
 	// Allow sockets to access session data
 	io.use((socket, next) => {

@@ -6,11 +6,11 @@ var logger 		= require('../logger');
 
 // Connect to the database
 // construct the database URI and encode username and password.
-var dbURI = "mongodb://" + 
-			encodeURIComponent(config.db.username) + ":" + 
-			encodeURIComponent(config.db.password) + "@" + 
-			config.db.host + ":" + 
-			config.db.port + "/" + 
+var dbURI = "mongodb://" +
+			encodeURIComponent(config.db.username) + ":" +
+			encodeURIComponent(config.db.password) + "@" +
+			config.db.host + ":" +
+			config.db.port + "/" +
 			config.db.name;
 Mongoose.connect(dbURI);
 
@@ -19,12 +19,13 @@ Mongoose.connection.on('error', function(err) {
 	if(err) throw err;
 });
 
-// mpromise (mongoose's default promise library) is deprecated, 
+// mpromise (mongoose's default promise library) is deprecated,
 // Plug-in your own promise library instead.
 // Use native promises
 Mongoose.Promise = global.Promise;
 
-module.exports = { Mongoose, 
+module.exports = {
+	Mongoose, 
 	models: {
 		user: require('./schemas/user.js'),
 		room: require('./schemas/room.js')
