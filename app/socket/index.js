@@ -1,21 +1,19 @@
 'use strict';
 
 var config 	= 		require('../config');
-var redis 	= 		require('redis').createClient;
-var adapter = 		require('socket.io-redis');
 var Room = 				require('../models/room');
+var Redis =       require('ioredis');
 
 let port = config.redis.port;
 let host = config.redis.host;
 let password = config.redis.password;
 
-var Redisx = require('ioredis');
-var redisx = new Redisx({
+var redis = new Redis({
    port: port,
    host: host
 
  });
-var pub = new Redisx({
+var pub = new Redis({
    port: port,
    host: host
  })
@@ -126,7 +124,7 @@ var ioEvents = function(io) {
       var msg = {roomId: roomId, message: message}
       var sendMsg = JSON.stringify(msg)
 
-      redisx.on('message', function (channel, redisMsg) {
+      redis.on('message', function (channel, redisMsg) {
            console.log('Received  ' + channel + ' message: ' + redisMsg);
 
            var parseMsg = JSON.parse(redisMsg)
@@ -166,13 +164,13 @@ var init = function(app){
 	// Force Socket.io to ONLY use "websockets"; No Long Polling.
 	io.set('transports', ['websocket']);
 
-  // using redislabs pub
+  // using redislabs 
   // subscribe and listen and emit
-  redisx.subscribe('newMessage', function (err, count) {
+  redis.subscribe('newMessage', function (err, count) {
 			console.log("Subscribed to " + count + " channel")
     });
 /*
-  redisx.on('message', function (channel, message) {
+  redis.on('message', function (channel, message) {
        console.log('Received  ' + channel + ' message: ' + message);
      });
 */
@@ -184,7 +182,6 @@ var init = function(app){
 
 	// Define all Events
 	ioEvents(io);
-
 
 	// The server object will be then used to listen to a port number
 	return server;
