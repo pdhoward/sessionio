@@ -7,7 +7,7 @@
 const express =			require('express')
 const cors =				require('cors')
 const router = 			express.Router()
-const passport =		reqiore('passport')
+const passport =		require('passport')
 
 let User = require('../models/user');
 let Room = require('../models/room');
