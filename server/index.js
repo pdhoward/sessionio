@@ -37,7 +37,6 @@ app.use(flash());
 app.use('/', function(req, res, next){
   console.log('HEARD FROM CHANNELS')
   console.log({method: req.method})
-  console.log(JSON.stringify(req.body))
   next()
 })
 
