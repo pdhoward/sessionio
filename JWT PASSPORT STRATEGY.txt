@@ -1,0 +1,6 @@
+
+
+
+JWT STRATEGY and PASSPORT EXPLAINED
+
+https://stackoverflow.com/questions/17397052/nodejs-passport-authentication-token

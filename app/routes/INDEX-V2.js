@@ -1,31 +1,23 @@
 'use strict';
 
-//////////////////////////////////////////////////////
-////////      xchg authorization and routes   ///////
-////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////            AUTHENTICATION PROCESS v2.0         ///////////////
+////////////////////////////////////////////////////////////////////////
 
-const express =			require('express')
-const cors =				require('cors')
-const router = 			express.Router()
-const passport =		reqiore('passport')
+//https://stackoverflow.com/questions/17397052/nodejs-passport-authentication-token
 
-let User = require('../models/user');
-let Room = require('../models/room');
+
+var express	 	= require('express');
+var router 		= express.Router();
+var passport 	= require('passport');
+
+var User = require('../models/user');
+var Room = require('../models/room');
 
 // Home page
 router.get('/', function(req, res, next) {
 	// If user is already logged in, then redirect to rooms page
-	const token = req.get('Authorization')
-	if (token) {
-	    req.token = token
-	    next()
-	  } else {
-	    res.status(403).send({
-	      error: 'Please provide an Authorization header to identify yourself '
-	    })
-	  }
-
-	if(req.token){
+	if(req.isAuthenticated()){
 		res.redirect('/rooms');
 	}
 	else{
