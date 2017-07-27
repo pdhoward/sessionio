@@ -44,6 +44,14 @@ router.post('/login', passport.authenticate('local', {
 	failureFlash: true
 }));
 
+
+// TEST
+router.post('/api/sms', function(req, res, next) {
+	console.log("HELLO FROM EXCHANGE SERVER - SENSED SMS")
+	console.log(JSON.stringify(req.body))
+	res.status(200).send
+});
+
 // Register via username and password
 router.post('/register', function(req, res, next) {
 

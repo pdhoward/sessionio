@@ -8,6 +8,7 @@ const express =     require('express');
 const app = express();
 const path =        require('path');
 const bodyParser =  require('body-parser');
+const cors =        require('cors')
 const flash =       require('connect-flash');
 
 //  application components
@@ -26,11 +27,19 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
+app.use(cors())
 
 app.use(session);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+app.use('/', function(req, res, next){
+  console.log('HEARD FROM CHANNELS')
+  console.log({method: req.method})
+  console.log(JSON.stringify(req.body))
+  next()
+})
 
 app.use('/', routes);
 
